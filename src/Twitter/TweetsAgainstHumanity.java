@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+
 public class TweetsAgainstHumanity {
     public static void main(String[] args){
         Random rand = new Random();
@@ -31,15 +32,15 @@ public class TweetsAgainstHumanity {
         Function<Boolean,Tweet> getCardsAgainstHumanity=x->
                 new Tweet("#cardsAgainstHumanity",randomString.apply(head)+" " +randomString.apply(bottom));
 
-        Function<Boolean,Tweet> getSlogan=x->
-                new Tweet("#sloganOfToday", randomString.apply(nat)+" " +randomString.apply(slogan));
 
         Function<Boolean,Tweet> getRandomFact=x->
                new Tweet("#randomFacts",randomString.apply(celeb) + randomString.apply(choice)+randomString.apply(randomFacts));
 
         Function<Boolean,User> randomUser = (u)->{
             return new User(randomString.apply(name), randomString.apply(name),randomString.apply(nationality),ages.get(rand.nextInt(ages.size())));
-                };
+                };        Function<Boolean,Tweet> getSlogan=x->
+                new Tweet("#sloganOfToday", randomString.apply(nat)+" " +randomString.apply(slogan));
+
 
         Function<Topic,Tweet> getTweet=(t)->{
             if(t==Topic.Card){
@@ -67,12 +68,16 @@ public class TweetsAgainstHumanity {
                 ).collect(Collectors.toList());
 
         List<Tweet> tweetList = genTweetsByL.apply(topics,50l);
+        tweetList.stream().forEach(e-> System.out.println(e.getTopic() + " ---  tweeted " + e.getText()));
         System.out.println(randomUser.apply(true).toString());
         List<User> userList = genUsersByL.apply(true,9);
 
         BiFunction<List<Tweet>,Integer,List<String>> numberOfTopic=(tweets, number)->
                 tweets.stream().map(t-> t.getTopic()).sorted().collect(Collectors.toList());
         System.out.println(numberOfTopic.apply(tweetList,3));
+        //find the list of nation and list of users which tweet more
+       Function<List<User>,User> SpecialNationa= listOfUsers -> listOfUsers.stream().filter(x->x.getAge()>20).max(Comparator.comparing(u->u.getTweet().size())).get();
+        System.out.println("The maximum tweeted person was by Mr\t\t"+SpecialNationa.apply(userList));
 
 
     }
