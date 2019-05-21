@@ -61,19 +61,29 @@ public class TweetsAgainstHumanity {
                 new Random().ints(n, 0, topics.size())
                         .mapToObj(i->topicList.get(i))
                         .map(t->getTweet.apply(t)).collect(Collectors.toList());
+
         BiFunction<Boolean,Integer,List<User>> genUsersByL=(t,n)->
                 IntStream.rangeClosed(0,n).mapToObj((u)->
                     randomUser.apply(true)
                 ).collect(Collectors.toList());
-
+        //we are generating 50 tweets to tweetList.
         List<Tweet> tweetList = genTweetsByL.apply(topics,50l);
+        //printing random user that we just created
         System.out.println(randomUser.apply(true).toString());
-        List<User> userList = genUsersByL.apply(true,9);
+        //we are generating 9 user into userList
+        List<User> userList = genUsersByL.apply(true,99);
 
         BiFunction<List<Tweet>,Integer,List<String>> numberOfTopic=(tweets, number)->
                 tweets.stream().map(t-> t.getTopic()).sorted().collect(Collectors.toList());
         System.out.println(numberOfTopic.apply(tweetList,3));
 
+
+        ThreeFunction<List<Tweet>,Long,String,Long> countTweets=(tw,minLen,word)->
+                tw.stream().filter(t->t.getText().contains(word) && t.getText().split(" ").length>minLen).count();
+        System.out.println(countTweets.apply(tweetList,3l, "will"));
+
+        long numberOfUsers = userList.stream().filter(e->e.getAge()>50 && e.getNation().equals("USA")).count();
+        System.out.println("Number of Users that are born in USA and above 50" + "\n" + numberOfUsers + " out of: "+ userList.size());
 
     }
 }
