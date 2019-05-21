@@ -82,8 +82,22 @@ public class TweetsAgainstHumanity {
                 tw.stream().filter(t->t.getText().contains(word) && t.getText().split(" ").length>minLen).count();
         System.out.println(countTweets.apply(tweetList,3l, "will"));
 
+        ThreeFunction<List<User>,Integer,String,List<String>> numberOfUsersWhoAreInGivenNationality = (users,k,nation)->
+                users.stream().filter(e->e.getNation().matches(nation))
+                        .count()
+                        .limit(k).collect(Collectors.toList());
+
         long numberOfUsers = userList.stream().filter(e->e.getAge()>50 && e.getNation().equals("USA")).count();
         System.out.println("Number of Users that are born in USA and above 50" + "\n" + numberOfUsers + " out of: "+ userList.size());
 
+        BiFunction<List<Tweet>,Integer,List<String>> mostFrequentKWordsInTweet = (tweets,n)->
+                tweets.stream().flatMap(t-> Stream.of(t.getText().split(" ")))
+                        .collect(Collectors.groupingBy(Function.identity(),Collectors.counting()))
+                        .entrySet().stream()
+                        .sorted((e1,e2)->(int)(e2.getValue()-e1.getValue()))
+                        .limit(n)
+                        .map(e->e.getKey())
+                        .collect(Collectors.toList());
+        System.out.println(mostFrequentKWordsInTweet.apply(tweetList,9));
     }
 }
