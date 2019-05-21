@@ -1,13 +1,11 @@
 package Twitter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class TweetsAgainstHumanity {
     public static void main(String[] args){
@@ -72,6 +70,9 @@ public class TweetsAgainstHumanity {
         System.out.println(randomUser.apply(true).toString());
         List<User> userList = genUsersByL.apply(true,9);
 
+        BiFunction<List<Tweet>,Integer,List<String>> numberOfTopic=(tweets, number)->
+                tweets.stream().map(t-> t.getTopic()).sorted().collect(Collectors.toList());
+        System.out.println(numberOfTopic.apply(tweetList,3));
 
 
     }
